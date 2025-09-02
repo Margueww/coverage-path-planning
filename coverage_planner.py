@@ -545,6 +545,13 @@ class CoveragePlanner():
 
     # Compute and print the current policy map based on the trajectory list
     def print_policy_map(self, trajectory=None, trajectory_annotations=None):
+        policy = self.create_policy_map(
+            trajectory, trajectory_annotations)
+
+        self.printd("print_policy_map", "Policy Map:\n")
+        self.print_map(policy)
+
+    def create_policy_map(self, trajectory=None, trajectory_annotations=None):
         policy = [[" " for row in range(len(self.map_grid[0]))]
                   for col in range(len(self.map_grid))]
 
@@ -574,8 +581,7 @@ class CoveragePlanner():
         for t in trajectory_annotations:
             policy[t[0]][t[1]] += "@"+t[2]
 
-        self.printd("print_policy_map", "Policy Map:\n")
-        self.print_map(policy)
+        return policy
 
     # Print helper function with the standarized printing structure
     # [function_name] message
