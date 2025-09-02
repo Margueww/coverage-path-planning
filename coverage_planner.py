@@ -583,6 +583,18 @@ class CoveragePlanner():
 
         return policy
 
+    def waypoints(self, trajectory):
+        if trajectory == None:
+            trajectory = self.current_trajectory
+
+        waypoints = [trajectory[0][1:3]]
+        for t in trajectory:
+            if t[5] is not None and self.action_name[t[5]] != '#':
+                # print("t:", t[5], self.action_name[t[5]])
+                waypoints.append([t[1], t[2]])
+        waypoints.append(trajectory[-1][1:3])
+        return waypoints
+    
     # Print helper function with the standarized printing structure
     # [function_name] message
     def printd(self, f, m, debug_level=0):

@@ -112,59 +112,133 @@ if __name__ == "__main__":
                     HeuristicType.HORIZONTAL, HeuristicType.CHEBYSHEV, HeuristicType.MANHATTAN]
     orientations = [0, 1, 2, 3]
 
-    for map_name in maps:
-        compare_tb = []
+    # for map_name in maps:
+    #     compare_tb = []
 
-        target_map = load_map(map_name)
-        cp = CoveragePlanner(target_map)
-        cp.set_debug_level(cp_debug_level)
+    #     target_map = load_map(map_name)
+    #     cp = CoveragePlanner(target_map)
+    #     cp.set_debug_level(cp_debug_level)
 
-        # Iterate over each orientation with each heuristic
-        for heuristic in cp_heuristics:
-            for orientation in orientations:
-                if test_show_each_result:
-                    print("\n\nIteration[map:{}, cp:{}, initial_orientation:{}]".format(
-                        map_name, heuristic.name, orientation))
+    #     # Iterate over each orientation with each heuristic
+    #     for heuristic in cp_heuristics:
+    #         for orientation in orientations:
+    #             if test_show_each_result:
+    #                 print("\n\nIteration[map:{}, cp:{}, initial_orientation:{}]".format(
+    #                     map_name, heuristic.name, orientation))
 
-                cp.start(initial_orientation=orientation, cp_heuristic=heuristic)
-                cp.compute()
+    #             cp.start(initial_orientation=orientation, cp_heuristic=heuristic)
+    #             cp.compute()
 
-                if test_show_each_result:
-                    cp.show_results()
+    #             if test_show_each_result:
+    #                 cp.show_results()
 
-                res = [heuristic.name, orientation]
-                res.extend(cp.result())
-                compare_tb.append(res)
+    #             res = [heuristic.name, orientation]
+    #             res.extend(cp.result())
+    #             compare_tb.append(res)
 
-        # Sort by number of steps
-        compare_tb.sort(key=lambda x: (x[3], x[4]))
+    #     # Sort by number of steps
+    #     compare_tb.sort(key=lambda x: (x[3], x[4]))
 
-        # Show results
-        print("Map tested: {}".format(map_name))
+    #     # Show results
+    #     print("Map tested: {}".format(map_name))
 
-        # Print the summary of results for the given map
-        summary = [row[0:5] for row in compare_tb]
-        for row in summary:
-            # Format cost to 2 decimal
-            row[4] = "{:.2f}".format(row[4])
-            # Convert movement index to movement names
-            row[1] = cp.movement_name[row[1]]
+    #     # Print the summary of results for the given map
+    #     summary = [row[0:5] for row in compare_tb]
+    #     for row in summary:
+    #         # Format cost to 2 decimal
+    #         row[4] = "{:.2f}".format(row[4])
+    #         # Convert movement index to movement names
+    #         row[1] = cp.movement_name[row[1]]
 
-        compare_tb_headers = ["Heuristic",
-                            "Orientation", "Found?", "Steps", "Cost"]
-        summary_tb = tabulate(summary, compare_tb_headers,
-                            tablefmt="pretty", floatfmt=".2f")
-        print(summary_tb)
+    #     compare_tb_headers = ["Heuristic",
+    #                         "Orientation", "Found?", "Steps", "Cost"]
+    #     summary_tb = tabulate(summary, compare_tb_headers,
+    #                         tablefmt="pretty", floatfmt=".2f")
+    #     print(summary_tb)
 
-        # Print the policy map of the best coverage planner
-        cp.print_policy_map(trajectory=compare_tb[0][5], trajectory_annotations=[])
+    #     # Print the policy map of the best coverage planner
+    #     cp.print_policy_map(trajectory=compare_tb[0][5], trajectory_annotations=[])
 
-        # Plot the complete trajectory map
-        plot_map(target_map, compare_tb[0][5], map_name=map_name,
-                params_str="Heuristic:{}, Initial Orientation: {}".format(compare_tb[0][0], cp.movement_name[compare_tb[0][1]]))
+    #     # Plot the complete trajectory map
+    #     plot_map(target_map, compare_tb[0][5], map_name=map_name,
+    #             params_str="Heuristic:{}, Initial Orientation: {}".format(compare_tb[0][0], cp.movement_name[compare_tb[0][1]]))
 
-        # Print the best path
-        print("\nList of coordinates of the best path: [map:{}, initial orientation: {} ({}), coverage path Heuristic:{}]".format(
-            map_name, cp.movement_name[compare_tb[0][1]], compare_tb[0][1], compare_tb[0][0]))
-        print(compare_tb[0][6])
-        print("\n\n")
+    #     # Print the best path
+    #     print("\nList of coordinates of the best path: [map:{}, initial orientation: {} ({}), coverage path Heuristic:{}]".format(
+    #         map_name, cp.movement_name[compare_tb[0][1]], compare_tb[0][1], compare_tb[0][0]))
+    #     print(compare_tb[0][6])
+    #     print("\n\n")
+    compare_tb = []
+    map_name = "grid"
+    target_map = load_map(map_name)
+    print(target_map)
+    # image_path = "/home/romulux/Documents/romulux_v2/path_generator/AtsushiSakai PythonRobotics master PathPlanning-WavefrontCPP/map/test_3.png"
+    # target_map = cv2.imread(image_path, -1)
+    # replace 255 with 0 and 0 with 1
+    # target_map = cv2.cvtColor(target_map, cv2.COLOR_BGR2GRAY)
+    target_map = np.where(target_map == 1, 0, 1)
+    target_map[5,2] = 2
+    
+    test_show_each_result = False
+    print(target_map)
+    cp = CoveragePlanner(target_map)
+    cp.set_debug_level(cp_debug_level)
+
+    # Iterate over each orientation with each heuristic
+    for heuristic in cp_heuristics:
+        for orientation in orientations:
+            if test_show_each_result:
+                print("\n\nIteration[map:{}, cp:{}, initial_orientation:{}]".format(
+                    map_name, heuristic.name, orientation))
+
+            cp.start(initial_orientation=orientation, cp_heuristic=heuristic)
+            cp.compute()
+
+            if test_show_each_result:
+                cp.show_results()
+
+            res = [heuristic.name, orientation]
+            res.extend(cp.result())
+            compare_tb.append(res)
+
+    # Sort by number of steps
+    compare_tb.sort(key=lambda x: (x[3], x[4]))
+
+    # Show results
+    print("Map tested: {}".format(map_name))
+
+    # Print the summary of results for the given map
+    summary = [row[0:5] for row in compare_tb]
+    for row in summary:
+        # Format cost to 2 decimal
+        row[4] = "{:.2f}".format(row[4])
+        # Convert movement index to movement names
+        row[1] = cp.movement_name[row[1]]
+
+    compare_tb_headers = ["Heuristic",
+                        "Orientation", "Found?", "Steps", "Cost"]
+    summary_tb = tabulate(summary, compare_tb_headers,
+                        tablefmt="pretty", floatfmt=".2f")
+    print(summary_tb)
+    # print("compare_tb 5", compare_tb[0][5])
+    # Print the policy map of the best coverage planner
+    cp.print_policy_map(trajectory=compare_tb[0][5], trajectory_annotations=[])
+    policy_map = cp.create_policy_map(trajectory=compare_tb[0][5], trajectory_annotations=[])
+    print("shape policy map:", len(policy_map))
+
+    # Plot the complete trajectory map
+
+    # Print the best path
+    print("\nList of coordinates of the best path: [map:{}, initial orientation: {} ({}), coverage path Heuristic:{}]".format(
+        map_name, cp.movement_name[compare_tb[0][1]], compare_tb[0][1], compare_tb[0][0]))
+    print(compare_tb[0][6])
+    print("\n\n")
+
+    waypoints = cp.waypoints(trajectory=compare_tb[0][5])
+    print("Waypoints:")
+    print(waypoints)
+
+    
+
+    plot_map(target_map, compare_tb[0][5], map_name=map_name,
+            params_str="Heuristic:{}, Initial Orientation: {}".format(compare_tb[0][0], cp.movement_name[compare_tb[0][1]]))
