@@ -589,9 +589,12 @@ class CoveragePlanner():
 
         waypoints = [trajectory[0][1:3]]
         for t in trajectory:
+            
+            
             if t[5] is not None and self.action_name[t[5]] != '#':
-                # print("t:", t[5], self.action_name[t[5]])
-                waypoints.append([t[1], t[2]])
+                
+                waypoints.append([t[1], t[2], t[3]])
+                
         waypoints.append(trajectory[-1][1:3])
         return waypoints
     
