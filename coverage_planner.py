@@ -587,7 +587,7 @@ class CoveragePlanner():
         if trajectory == None:
             trajectory = self.current_trajectory
 
-        waypoints = [trajectory[0][1:3]]
+        waypoints = [trajectory[0][1:4]]
         for t in trajectory:
             
             
@@ -595,7 +595,7 @@ class CoveragePlanner():
                 
                 waypoints.append([t[1], t[2], t[3]])
                 
-        waypoints.append(trajectory[-1][1:3])
+        waypoints.append(trajectory[-1][1:4])
         return waypoints
     
     # Print helper function with the standarized printing structure
